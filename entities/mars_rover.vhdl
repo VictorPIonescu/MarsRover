@@ -1,5 +1,6 @@
 library IEEE;
-use IEEE.std_logic_1164.ALL;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
 
 entity mars_rover is 
         port (
@@ -12,7 +13,7 @@ entity mars_rover is
             pwm_l       	: out	std_logic;
             pwm_r       	: out	std_logic;
             
-            line_finder_done : out std_logic
+            turn_count_out : out unsigned(1 downto 0)
         );
 end entity mars_rover;
 
@@ -46,7 +47,8 @@ architecture structural of mars_rover is
 		motor_l_direction	: out	std_logic;
 
 		motor_r_reset		: out	std_logic;
-		motor_r_direction	: out	std_logic
+		motor_r_direction	: out	std_logic;
+		turn_count_out : out unsigned(1 downto 0)
 	);
   end component top_controller;
   
@@ -84,7 +86,7 @@ begin
                               sensor_l_out, sensor_m_out, sensor_r_out, -- sensor signals from input_buffer
                               count_out, -- count signal in from counter
 		                          count_reset, -- reset signal out to counter
-                              motor_l_reset, motor_l_direction, motor_r_reset, motor_r_direction); -- motor signals out to pwm_generators
+                              motor_l_reset, motor_l_direction, motor_r_reset, motor_r_direction, turn_count_out); -- motor signals out to pwm_generators
 
     L3: counter       port map (clk, count_reset, -- should this be the reset from the mars_rover entity? (check other reset signals too)
 				                       count_out); -- count signal out

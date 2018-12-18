@@ -24,7 +24,7 @@ entity line_finder is
 end entity line_finder;
 
 architecture behaviour of line_finder is
-   type controller_state is (FIND_LINE, PASS_LINE, TURN_LEFT, TURN_RIGHT, LINE_FOUND, F_FIND, F_PASS, SL, SR);
+   type controller_state is (FIND_LINE, PASS_LINE, TURN_LEFT, TURN_RIGHT, INTER_FOUND, LINE_FOUND, F_FIND, F_PASS, SL, SR);
    --signal last_state : controller_state; -- used to determine previous state while we are in F state. -- RE-INTRODUCE????????
    signal state, new_state: controller_state;
    signal inter_sensor_l, inter_sensor_m, inter_sensor_r: std_logic;
@@ -131,13 +131,19 @@ begin
       when FIND_LINE =>
         if (sensor_l = '1' and sensor_m = '1' and sensor_r = '1') then
           new_state <= F_FIND;
+        elsif (sensor_l = '1' and sensor_m = '0' and sensor_r = '1') then -- if (WBW) (placed on line)
+            count_reset <= '1';
+            new_state <= INTER_FOUND;
         elsif (not(sensor_l = '1' and sensor_m = '1' and sensor_r = '1')) then
           new_state <= PASS_LINE;
-        elsif (sensor_l = '1' and sensor_m = '0' and sensor_r = '1') then -- if (WBW) (placed on line)
-          new_state <= LINE_FOUND;
         else
           new_state <= FIND_LINE;
         end if;
+        
+      when INTER_FOUND =>
+        count_reset <= '1';
+        new_state <= LINE_FOUND;
+      
         
       when PASS_LINE =>
         if (not(sensor_l = '1' and sensor_m = '1' and sensor_r = '1')) then -- if not (WWW)

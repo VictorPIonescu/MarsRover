@@ -2,12 +2,12 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity controller_tb is
-end entity controller_tb;
+entity turner_right_tb is
+end entity turner_right_tb;
 
-architecture structural of controller_tb is
+architecture structural of turner_right_tb is
 
-component controller is
+component turner_right is
 	port (	clk		: in	std_logic;
 		reset			: in	std_logic;
 
@@ -22,16 +22,17 @@ component controller is
 		motor_l_direction	: out	std_logic;
 
 		motor_r_reset		: out	std_logic;
-		motor_r_direction	: out	std_logic
+		motor_r_direction	: out	std_logic;
+		
+		turner_right_done : out std_logic
 	);
-end component controller;
-
+end component turner_right;
 
 signal clk, reset, 
     sensor_l, sensor_m, sensor_r,
     count_reset, 
     motor_l_reset, motor_l_direction, 
-    motor_r_reset, motor_r_direction: std_logic;
+    motor_r_reset, motor_r_direction, turner_right_done: std_logic;
 signal count_in: std_logic_vector (21 downto 0);
 
 begin
@@ -61,24 +62,27 @@ reset <=	'1' after 5 ns,
     '0' after 15 ns;
     
 sensor_l <= '0' after 0 ns,
-            '1' after 50 ns,
-            '0' after 100 ns,
+            '1' after 100 ns,
             '1' after 200 ns,
-            '0' after 250 ns,
-            '1' after 300 ns,
+            '0' after 300 ns,
             '0' after 350 ns,
             '1' after 400 ns;
 sensor_m <= '0' after 0 ns,
-            '1' after 100 ns,
-            '0' after 250 ns,
-            '1' after 350 ns;
+            '0' after 100 ns,
+            '0' after 200 ns,
+            '0' after 300 ns,
+            '0' after 400 ns;
 sensor_r <= '0' after 0 ns,
-            '1' after 250 ns;
+            '0' after 100 ns,
+            '0' after 200 ns,
+            '1' after 300 ns,
+            '1' after 400 ns;
 		
-lb10: controller port map( clk, reset, 
+lb10: turner_right port map( clk, reset, 
     sensor_l, sensor_m, sensor_r,
     count_in, count_reset,
     motor_l_reset, motor_l_direction, 
-    motor_r_reset, motor_r_direction
+    motor_r_reset, motor_r_direction, 
+    turner_right_done
                         );
 end architecture structural;
