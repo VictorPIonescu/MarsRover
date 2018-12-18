@@ -75,7 +75,7 @@ function createSensorList(sensorName, sensorBoxIndex) {
     output.append(sensorName + " <= ");
     for (var i = list.childElementCount - 1; i >= 0; i--) {
         if (i < list.childElementCount - 1) {
-            output.append("\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0");
+            output.append("\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0");
         }
         output.append("'" + colorToBit[list.children[i].children[sensorBoxIndex].style.backgroundColor] + "'");
         output.append(" after " + time + " " + timeUnit);
