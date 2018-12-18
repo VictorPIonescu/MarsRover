@@ -67,8 +67,8 @@ function createOutput() {
 
 function createSensorList(sensorName, sensorBoxIndex) {
     var time = 0;
-    var interval = 10;//document.getElementById("intervalInput").value;
-    var timeUnit = "ns";//document.getElementById("timeUnitInput").value;
+    var interval = parseInt(document.getElementById("intervalInput").value);
+    var timeUnit = document.getElementById("timeUnitInput").value;
 
     output.append(sensorName + " <= ");
     for (var i = list.childElementCount - 1; i >= 0; i--) {
