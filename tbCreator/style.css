@@ -8,20 +8,20 @@
     margin-right: 0.1em;
 }
 
-#container {
-    display: flex;
-}
+/*#container {*/
+    /*display: flex;*/
+/*}*/
 
-#listView {
-    flex: 1;
-}
+/*#listView {*/
+    /*flex: 1;*/
+/*}*/
 
-#arrowDiv {
-    height: 100%;
-}
+/*#arrowDiv {*/
+    /*height: 100%;*/
+/*}*/
 
-#tail {
-    border: 1px solid black;
-    height: inherit;
-    width: 0.5em;
-}
+/*#tail {*/
+    /*border: 1px solid black;*/
+    /*height: inherit;*/
+    /*width: 0.5em;*/
+/*}*/

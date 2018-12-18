@@ -63,7 +63,6 @@ function createOutput() {
     createSensorList("sensor_l", 0);
     createSensorList("sensor_m", 1);
     createSensorList("sensor_r", 2);
-    console.log(list.children[0]);
 }
 
 function createSensorList(sensorName, sensorBoxIndex) {
