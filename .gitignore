@@ -3,3 +3,4 @@ entities/*.bak
 *iml
 node_modules/
 package-lock.json
+entities/work/

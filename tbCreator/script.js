@@ -15,7 +15,7 @@ function toggleSensorBox(element) {
     element.style.backgroundColor = inversions[element.style.backgroundColor];
 }
 
-function append() {
+function addAfter() {
     if (list.childElementCount === 0) {
         list.appendChild(createListItem());
     } else {
@@ -24,6 +24,8 @@ function append() {
 }
 
 function prepend(item) {
+    // javascript already handles the final element by return null as nextSibling.
+    // insertBefore() will call appendChild() if reference item is null.
     list.insertBefore(createListItem(), item.nextSibling);
 }
 
@@ -37,8 +39,8 @@ function createListItem() {
 
     for (var i = 0; i < 3; i++) {
         var smallSensorBox = document.createElement("div");
-        smallSensorBox.className = "sensorBox smallBox";
-        // closure
+        smallSensorBox.className = "sensorBox";
+        // encapsulate value of i at this moment by calling a function with i was argument
         smallSensorBox.onclick = function(box) {return function() {toggleSensorBox(box)}}(smallSensorBox);
         smallSensorBox.style.backgroundColor = "white";
         itemDiv.appendChild(smallSensorBox);
