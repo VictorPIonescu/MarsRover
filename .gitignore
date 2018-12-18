@@ -1,1 +1,5 @@
 entities/*.bak
+.idea/
+*iml
+node_modules/
+package_lock.json

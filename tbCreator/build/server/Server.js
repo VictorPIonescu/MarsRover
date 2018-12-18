@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var express = require("express");
+var app = express();
+var port = 3000;
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/", express.static(__dirname + "/client/"));
+app.listen(port);
+console.log("Server started on port " + port);

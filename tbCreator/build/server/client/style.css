@@ -1,0 +1,27 @@
+.sensorBox {
+    height: 3em;
+    width: 3em;
+    display: inline-block;
+    border: 1px solid black;
+    cursor: pointer;
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+}
+
+#container {
+    display: flex;
+}
+
+#listView {
+    flex: 1;
+}
+
+#arrowDiv {
+    height: 100%;
+}
+
+#tail {
+    border: 1px solid black;
+    height: inherit;
+    width: 0.5em;
+}
