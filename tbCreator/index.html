@@ -3,6 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv = "X-UA-Compatible" content = "IE = edge">
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1">
     <title>TB Creator</title>
     <link rel="stylesheet" href="style.css?v=1.0">
 
@@ -15,9 +17,10 @@
         <!--<div id="tail"></div>-->
     <!--</div>-->
 <div id="listView"></div>
-Interval <input id="intervalInput"/><br/>
-Time Unit <select id="timeUnitInput">
-    <option value="ns">ns</option>
+<label for="initialTime" >Initial time</label> <input placeholder="0" id="initialTime"/><br/>
+<label for="intervalInput" >Interval</label> <input placeholder="20" id="intervalInput"/><br/>
+<label for="timeUnitInput" >Time Unit</label> <select id="timeUnitInput">
+    <option selected value="ns">ns</option>
     <option value="ms">ms</option>
 </select>
 <button onclick="createOutput()">create output</button>
