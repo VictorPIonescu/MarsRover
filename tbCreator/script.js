@@ -1,6 +1,6 @@
 var inversions = {
-    "white": "black",
-    "black": "white"
+    0: 1,
+    1: 0
 };
 
 var colorToBit = {
@@ -8,58 +8,85 @@ var colorToBit = {
   "black": 0
 };
 
+var bitToColor = {
+    0: "black",
+    1: "white"
+};
+
+var newList = [];
+var current = newList;
+var savedLists;
+
 var list = document.getElementById("listView");
 var output = document.getElementById("output");
 
 var scenariosURL = "/scenarios";
 
-function toggleSensorBox(element) {
-    element.style.backgroundColor = inversions[element.style.backgroundColor];
+function toggleSensorBox(i, j) {
+    current[i][j] = inversions[current[i][j]];
+    refreshElementList(current);
 }
 
 function addAfter() {
-    if (list.childElementCount === 0) {
-        list.appendChild(createListItem());
-    } else {
-        list.insertBefore(createListItem(), list.children[0]);
+    current.splice(0, 0, createItem());
+    refreshElementList(current);
+}
+
+function prepend(index) {
+    current.splice(index+1, 0, createItem());
+    refreshElementList(current);
+}
+
+function remove(i) {
+    current.splice(i, 1);
+    refreshElementList(current);
+}
+
+function createItem() {
+    return [1, 1, 1];
+}
+
+function refreshElementList() {
+    list.innerHTML = "";
+    for (var i = 0; i < current.length; i++)
+    {
+        var itemDiv = document.createElement("div");
+        itemDiv.className = "sensorRow";
+
+        for (var j = 0; j < current[i].length; j++) {
+            var smallSensorBox = document.createElement("div");
+            smallSensorBox.className = "sensorBox";
+            // encapsulate value of i at this moment by calling a function with i was argument
+            smallSensorBox.onclick = function (i, j) {
+                return function () {
+                    toggleSensorBox(i, j)
+                }
+            }(i, j);
+            smallSensorBox.style.backgroundColor = bitToColor[current[i][j]];
+            itemDiv.appendChild(smallSensorBox);
+        }
+
+        var prependButton = document.createElement("button");
+        prependButton.innerText = "add before";
+        prependButton.onclick = function (index) {
+            return function () {
+                prepend(index)
+            }
+        }(i);
+
+        var removeButton = document.createElement("button");
+        removeButton.innerText = "remove";
+        removeButton.onclick = function (index) {
+            return function () {
+                remove(index)
+            }
+        }(i);
+
+        itemDiv.appendChild(prependButton);
+        itemDiv.appendChild(removeButton);
+
+        list.appendChild(itemDiv);
     }
-}
-
-function prepend(item) {
-    // javascript already handles the final element by return null as nextSibling.
-    // insertBefore() will call appendChild() if reference item is null.
-    list.insertBefore(createListItem(), item.nextSibling);
-}
-
-function remove(item) {
-    list.removeChild(item);
-}
-
-function createListItem() {
-    var itemDiv = document.createElement("div");
-    itemDiv.className = "sensorRow";
-
-    for (var i = 0; i < 3; i++) {
-        var smallSensorBox = document.createElement("div");
-        smallSensorBox.className = "sensorBox";
-        // encapsulate value of i at this moment by calling a function with i was argument
-        smallSensorBox.onclick = function(box) {return function() {toggleSensorBox(box)}}(smallSensorBox);
-        smallSensorBox.style.backgroundColor = "white";
-        itemDiv.appendChild(smallSensorBox);
-    }
-
-    var prependButton = document.createElement("button");
-    prependButton.innerText = "add before";
-    prependButton.onclick = function(index) {return function() {prepend(index)}}(itemDiv);
-
-    var removeButton = document.createElement("button");
-    removeButton.innerText = "remove";
-    removeButton.onclick = function(index) {return function() {remove(index)}}(itemDiv);
-
-    itemDiv.appendChild(prependButton);
-    itemDiv.appendChild(removeButton);
-
-    return itemDiv;
 }
 
 function createOutput() {
@@ -69,17 +96,17 @@ function createOutput() {
     createSensorList("sensor_r", 2);
 }
 
-function createSensorList(sensorName, sensorBoxIndex) {
+function createSensorList(sensorName, j) {
     var time = parseInt(document.getElementById("initialTime").value) || 0;
     var interval = parseInt(document.getElementById("intervalInput").value) || 20;
     var timeUnit = document.getElementById("timeUnitInput").value;
 
     output.append(sensorName + " <= ");
-    for (var i = list.childElementCount - 1; i >= 0; i--) {
-        if (i < list.childElementCount - 1) {
+    for (var i = current.length - 1; i >= 0; i--) {
+        if (i < current.length - 1) {
             output.append("\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0");
         }
-        output.append("'" + colorToBit[list.children[i].children[sensorBoxIndex].style.backgroundColor] + "'");
+        output.append("'" + current[i][j] + "'");
         output.append(" after " + time + " " + timeUnit);
         if (i === 0) {
             output.append(";");
