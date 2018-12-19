@@ -26,3 +26,8 @@
     border-radius: 2px;
     width: auto;
 }
+
+#output {
+    width: 15em;
+    height: auto;
+}

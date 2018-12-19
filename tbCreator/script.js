@@ -4,8 +4,8 @@ var bitInversions = {
 };
 
 var displayInversions = {
-    "none": "block",
-    "block": "none"
+    "hidden": "visible",
+    "visible": "hidden"
 };
 
 var bitToColor = {
@@ -20,6 +20,7 @@ var savedLists;
 var list = document.getElementById("listView");
 var output = document.getElementById("output");
 var savedListsList = document.getElementById("savedLists");
+var outputStuff = document.getElementById("outputStuff");
 
 var scenariosURL = "/scenarios";
 
@@ -28,10 +29,25 @@ window.onload = function() {
 };
 
 function toggleOutput() {
-    console.log(output.style.display);
-    output.style.display = displayInversions[output.style.display];
+    output.style.visibility = displayInversions[output.style.visibility];
     createOutput();
-    console.log(output.style.display);
+}
+
+function copyOutput() {
+    var msg = document.createElement('span');
+    msg.innerText = "copied!";
+
+    output.style.visibility = "visible";
+    output.focus();
+    output.select();
+    if (document.execCommand('copy')) {
+        outputStuff.appendChild(msg);
+    } else {
+        msg.innerText = "NOT COPIED!";
+        outputStuff.appendChild(msg);
+    }
+    setTimeout(function() {outputStuff.removeChild(msg)}, 2000);
+    output.style.visibility = "hidden";
 }
 
 function toggleSensorBox(i, j) {
@@ -152,6 +168,7 @@ function createSensorList(sensorName, j) {
         } else {
             output.append(",");
         }
+        output.append("\n");
         output.appendChild(document.createElement("br"));
         time += interval;
     }
