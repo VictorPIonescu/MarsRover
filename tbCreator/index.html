@@ -14,6 +14,18 @@
 Robot beweegt van beneden naar boven!<br/><br/>
 Saved Lists (click to open):<br/>
 <div id="savedLists"></div>
+<div id="fullOutputStuff">
+    <label for="resetInterval">Reset interval</label> <input id="resetInterval" placeholder="20"/>
+    <select id="timeUnitFullOutput">
+        <option selected value="ns">ns</option>
+        <option value="ms">ms</option>
+    </select><br/><br/>
+    <button onclick="createFullOutput()">generate full output</button>
+    <button onclick="toggleFullOutput()">show/hide full output</button>
+    <button onclick="copyFullOutput()">copy full output</button>
+</div>
+<br/>
+<textarea id="fullOutput" style="visibility: hidden"></textarea>
 <hr>
 <button onclick="addAfter()">Add</button>
 <div id="listView"></div>

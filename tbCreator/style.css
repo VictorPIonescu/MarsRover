@@ -20,3 +20,8 @@
 #newListElement {
     background-color: green;
 }
+
+#fullOutput {
+    width: 30em;
+    height: 20em;
+}

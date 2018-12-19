@@ -17,10 +17,13 @@ var newList = [];
 var current = newList;
 var savedLists;
 
-var list = document.getElementById("listView");
-var output = document.getElementById("output");
 var savedListsList = document.getElementById("savedLists");
+var list = document.getElementById("listView");
+
+var output = document.getElementById("output");
+var fullOutput = document.getElementById("fullOutput");
 var outputStuff = document.getElementById("outputStuff");
+var fullOutputStuff = document.getElementById("fullOutputStuff");
 
 var scenariosURL = "/scenarios";
 
@@ -32,28 +35,6 @@ window.onload = function() {
     }
 
 };
-
-function toggleOutput() {
-    output.style.visibility = displayInversions[output.style.visibility];
-    createOutput();
-}
-
-function copyOutput() {
-    var msg = document.createElement('span');
-    msg.innerText = "copied!";
-
-    output.style.visibility = "visible";
-    output.focus();
-    output.select();
-    if (document.execCommand('copy')) {
-        outputStuff.appendChild(msg);
-    } else {
-        msg.innerText = "NOT COPIED!";
-        outputStuff.appendChild(msg);
-    }
-    setTimeout(function() {outputStuff.removeChild(msg)}, 2000);
-    output.style.visibility = "hidden";
-}
 
 function toggleSensorBox(i, j) {
     current[i][j] = bitInversions[current[i][j]];
@@ -155,39 +136,106 @@ function refreshSavedList() {
         row.appendChild(deleteButton);
 
         savedListsList.appendChild(row);
-
     }
 
 }
 
 function createOutput() {
     output.innerHTML = "";
-    createSensorList("sensor_l", 0);
-    createSensorList("sensor_m", 1);
-    createSensorList("sensor_r", 2);
+    var startTime = parseInt(document.getElementById("initialTime").value) || 0;
+    createSensorList("sensor_l", 0, current, startTime, output);
+    createSensorList("sensor_m", 1, current, startTime, output);
+    createSensorList("sensor_r", 2, current, startTime, output);
 }
 
-function createSensorList(sensorName, j) {
-    var time = parseInt(document.getElementById("initialTime").value) || 0;
+function createSensorList(sensorName, j, list, startTime, htmlOutputElement) {
+    var time = startTime;
     var interval = parseInt(document.getElementById("intervalInput").value) || 20;
     var timeUnit = document.getElementById("timeUnitInput").value;
 
-    output.append(sensorName + " <= ");
-    for (var i = current.length - 1; i >= 0; i--) {
-        if (i < current.length - 1) {
-            output.append("\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0");
+    htmlOutputElement.append(sensorName + " <= ");
+    for (var i = list.length - 1; i >= 0; i--) {
+        if (i < list.length - 1) {
+            htmlOutputElement.append("\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0");
         }
-        output.append("'" + current[i][j] + "'");
-        output.append(" after " + time + " " + timeUnit);
+        htmlOutputElement.append("'" + list[i][j] + "'");
+        htmlOutputElement.append(" after " + time + " " + timeUnit);
         if (i === 0) {
-            output.append(";");
+            htmlOutputElement.append(";");
         } else {
-            output.append(",");
+            htmlOutputElement.append(",");
         }
-        output.append("\n");
-        output.appendChild(document.createElement("br"));
+        htmlOutputElement.append("\n");
+        htmlOutputElement.appendChild(document.createElement("br"));
         time += interval;
     }
+    return time;
+}
+
+function toggleOutput() {
+    output.style.visibility = displayInversions[output.style.visibility];
+}
+
+function toggleFullOutput() {
+    fullOutput.style.visibility = displayInversions[fullOutput.style.visibility];
+}
+
+function copyOutput() {
+    var msg = document.createElement('span');
+    msg.innerText = "copied!";
+
+    output.style.visibility = "visible";
+    output.focus();
+    output.select();
+    if (document.execCommand('copy')) {
+        outputStuff.appendChild(msg);
+    } else {
+        msg.innerText = "NOT COPIED!";
+        outputStuff.appendChild(msg);
+    }
+    setTimeout(function() {outputStuff.removeChild(msg)}, 2000);
+    output.style.visibility = "hidden";
+}
+
+function copyFullOutput() {
+    var msg = document.createElement('span');
+    msg.innerText = "copied!";
+
+    fullOutput.style.visibility = "visible";
+    fullOutput.focus();
+    fullOutput.select();
+    if (document.execCommand('copy')) {
+        fullOutputStuff.appendChild(msg);
+    } else {
+        msg.innerText = "NOT COPIED!";
+        fullOutputStuff.appendChild(msg);
+    }
+    setTimeout(function() {fullOutputStuff.removeChild(msg)}, 2000);
+    fullOutput.style.visibility = "hidden";
+}
+
+function createFullOutput() {
+    if (!savedLists) {
+        alert("Saved lists not loaded!");
+        return;
+    }
+    fullOutput.innerHTML = "";
+    var startTime = 0;
+    var keys = Object.keys(savedLists);
+    var resetInterval = parseInt(document.getElementById("resetInterval").value) || 20;
+    var resetIntervalTimeUnit = document.getElementById("timeUnitFullOutput").value;
+    for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        fullOutput.append(" -- " + key + "\n");
+        var list = savedLists[key];
+        createSensorList("sensor_l", 0, list, startTime, fullOutput);
+        createSensorList("sensor_m", 1, list, startTime, fullOutput);
+        var lastSensorDone = createSensorList("sensor_r", 2, list, startTime, fullOutput);
+        fullOutput.append("reset <= '1' after " + lastSensorDone + " " + resetIntervalTimeUnit + ",");
+        startTime = lastSensorDone + resetInterval;
+        fullOutput.append(" '0' after " + startTime + " " + resetIntervalTimeUnit + ";\n");
+    }
+    fullOutput.style.visibility = "visible";
 }
 
 function getScenarios() {
