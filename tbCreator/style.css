@@ -9,23 +9,20 @@
 }
 
 .savedListElement {
+    text-align: center;
     border: 1px solid black;
+    width: 8em;
+    height: 1.5em;
+    margin-bottom: 0.3em;
+    cursor: pointer;
 }
 
-/*#container {*/
-    /*display: flex;*/
-/*}*/
+#newListElement {
+    background-color: green;
+}
 
-/*#listView {*/
-    /*flex: 1;*/
-/*}*/
-
-/*#arrowDiv {*/
-    /*height: 100%;*/
-/*}*/
-
-/*#tail {*/
-    /*border: 1px solid black;*/
-    /*height: inherit;*/
-    /*width: 0.5em;*/
-/*}*/
+.box {
+    border: 1px solid black;
+    border-radius: 2px;
+    width: auto;
+}

@@ -1,11 +1,11 @@
-var inversions = {
+var bitInversions = {
     0: 1,
     1: 0
 };
 
-var colorToBit = {
-  "white": 1,
-  "black": 0
+var displayInversions = {
+    "none": "block",
+    "block": "none"
 };
 
 var bitToColor = {
@@ -23,8 +23,19 @@ var savedListsList = document.getElementById("savedLists");
 
 var scenariosURL = "/scenarios";
 
+window.onload = function() {
+    getScenarios();
+};
+
+function toggleOutput() {
+    console.log(output.style.display);
+    output.style.display = displayInversions[output.style.display];
+    createOutput();
+    console.log(output.style.display);
+}
+
 function toggleSensorBox(i, j) {
-    current[i][j] = inversions[current[i][j]];
+    current[i][j] = bitInversions[current[i][j]];
     refreshElementList(current);
 }
 
@@ -97,16 +108,24 @@ function selectList(list) {
 }
 
 function refreshSavedList() {
-    var keys = Object.keys(savedLists);
     savedListsList.innerHTML = "";
+    var savedListElement = document.createElement("div");
+    savedListElement.className = "savedListElement";
+    savedListElement.id = "newListElement";
+    savedListElement.onclick = function() {selectList(newList)};
+    savedListElement.innerText = "NEW (UNSAVED)";
+    savedListsList.appendChild(savedListElement);
+
+    var keys = Object.keys(savedLists);
     for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
-        var savedListElement = document.createElement("div");
+        savedListElement = document.createElement("div");
         savedListElement.className = "savedListElement";
         savedListElement.onclick = function(key) {return function() {selectList(savedLists[key])}}(key);
         savedListElement.innerText = key;
         savedListsList.appendChild(savedListElement);
     }
+
 }
 
 function createOutput() {
@@ -142,13 +161,18 @@ function getScenarios() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', scenariosURL, true);
     xhr.onload = function() {
-        if (xhr.status !== 200  || xhr.responseText.error) {
+        if (xhr.status !== 200) {
             console.log('Request failed.  Returned status of ' + xhr.status);
             console.log(xhr.responseText);
         } else {
-            savedLists = JSON.parse(xhr.responseText);
-            console.log(savedLists);
-            refreshSavedList();
+            var parsedResponse = JSON.parse(xhr.responseText);
+            if (parsedResponse.error) {
+                alert(parsedResponse.error);
+            } else {
+                console.log(parsedResponse);
+                savedLists = parsedResponse;
+                refreshSavedList();
+            }
         }
     };
     xhr.send();
@@ -162,17 +186,21 @@ function writeScenario() {
     xhr.open('PUT', scenariosURL);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function() {
-        if (xhr.status !== 200  || xhr.responseText.error) {
+        if (xhr.status !== 200) {
             console.log('Request failed.  Returned status of ' + xhr.status);
             console.log(xhr.responseText);
-        }
-        else {
-            console.log(xhr.responseText);
+        } else {
+            var parsedResponse = JSON.parse(xhr.responseText);
+            if (parsedResponse.error) {
+                alert(parsedResponse.error);
+            } else {
+                console.log(parsedResponse);
+                getScenarios();
+            }
         }
     };
     xhr.send(JSON.stringify({
         name: name,
         data: data
     }));
-
 }
