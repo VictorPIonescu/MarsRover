@@ -42,6 +42,7 @@ function getScenarios() {
             }
         }
         console.log("other code");
+        console.log(err);
         return {error: err};
     }
 }
