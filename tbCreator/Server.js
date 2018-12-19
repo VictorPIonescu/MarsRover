@@ -33,7 +33,7 @@ function getScenarios() {
     try {
         return JSON.parse(fs.readFileSync(filePath, 'utf8'));
     } catch (err) {
-        if (err.errno === -4058) {
+        if (err.code === "ENOENT") {
             try {
                 fs.writeFileSync(filePath, JSON.stringify({}), 'utf8');
                 return {};
