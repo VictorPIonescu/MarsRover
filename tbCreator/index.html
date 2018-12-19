@@ -14,13 +14,15 @@
 Robot beweegt van beneden naar boven!<br/><br/>
 Saved Lists (click to open):<br/>
 <div id="savedLists"></div>
+<hr>
 <button onclick="addAfter()">Add</button>
 <div id="listView"></div>
 <label for="scenarioInput">Scenario name:</label><br/>
 <input id="scenarioInput"/>
 <button onclick="writeScenario()">Save</button>
 <br/><br/>
-<div id="outputStuff" class="box">
+<hr>
+<div id="outputStuff">
     <label for="initialTime" >Initial time</label> <input placeholder="0" id="initialTime" onkeyup="createOutput()"/><br/>
     <label for="intervalInput" >Interval</label> <input placeholder="20" id="intervalInput" onkeyup="createOutput()"/><br/>
     <label for="timeUnitInput" >Time Unit</label> <select id="timeUnitInput">

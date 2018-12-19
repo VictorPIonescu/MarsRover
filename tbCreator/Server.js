@@ -20,6 +20,10 @@ scenariosRouter.put("/", function(req, res) {
 scenariosRouter.get("/", function(req, res) {
     res.send(getScenarios());
 });
+
+scenariosRouter.delete("/", function(req, res) {
+    res.send(deleteScenario(req.body.name));
+});
 app.use("/scenarios", scenariosRouter);
 
 function getScenarios() {
@@ -53,6 +57,22 @@ function writeScenario(name, data) {
     } catch (err) {
         return {error: err};
     }
+}
+
+function deleteScenario(name) {
+    var scenarios = getScenarios();
+    if (scenarios.hasOwnProperty(name)) {
+        delete scenarios[name];
+        try {
+            fs.writeFileSync(filePath, JSON.stringify(scenarios), 'utf8');
+            return {};
+        } catch (err) {
+            return {error: err};
+        }
+    } else {
+        return {error: "Scenario " + name + " does not exist."}
+    }
+
 }
 
 app.listen(port);

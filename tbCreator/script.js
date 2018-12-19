@@ -26,6 +26,11 @@ var scenariosURL = "/scenarios";
 
 window.onload = function() {
     getScenarios();
+    var inputs = document.getElementsByTagName("input");
+    for (input in inputs) {
+        inputs[input].value = "";
+    }
+
 };
 
 function toggleOutput() {
@@ -129,17 +134,28 @@ function refreshSavedList() {
     savedListElement.className = "savedListElement";
     savedListElement.id = "newListElement";
     savedListElement.onclick = function() {selectList(newList)};
-    savedListElement.innerText = "NEW (UNSAVED)";
+    savedListElement.innerText = "NEW/UNSAVED";
     savedListsList.appendChild(savedListElement);
 
     var keys = Object.keys(savedLists);
     for (var i = 0; i < keys.length; i++) {
+        var row = document.createElement("div");
         var key = keys[i];
         savedListElement = document.createElement("div");
+        savedListElement.style.display = "inline-block";
         savedListElement.className = "savedListElement";
         savedListElement.onclick = function(key) {return function() {selectList(savedLists[key])}}(key);
         savedListElement.innerText = key;
-        savedListsList.appendChild(savedListElement);
+        row.appendChild(savedListElement);
+
+        var deleteButton = document.createElement("button");
+        deleteButton.style.display = "inline-block";
+        deleteButton.innerText = "remove";
+        deleteButton.onclick = function(key) {return function() {deleteScenario(key)}}(key);
+        row.appendChild(deleteButton);
+
+        savedListsList.appendChild(row);
+
     }
 
 }
@@ -213,11 +229,36 @@ function writeScenario() {
             } else {
                 console.log(parsedResponse);
                 getScenarios();
+                newList = [];
             }
         }
     };
     xhr.send(JSON.stringify({
         name: name,
         data: data
+    }));
+}
+
+function deleteScenario(name) {
+    console.log(name);
+    var xhr = new XMLHttpRequest();
+    xhr.open('DELETE', scenariosURL);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status !== 200) {
+            console.log('Request failed.  Returned status of ' + xhr.status);
+            console.log(xhr.responseText);
+        } else {
+            var parsedResponse = JSON.parse(xhr.responseText);
+            if (parsedResponse.error) {
+                alert(parsedResponse.error);
+            } else {
+                console.log(parsedResponse);
+                getScenarios();
+            }
+        }
+    };
+    xhr.send(JSON.stringify({
+        name: name
     }));
 }
