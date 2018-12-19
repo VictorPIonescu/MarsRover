@@ -4,3 +4,4 @@ entities/*.bak
 node_modules/
 package-lock.json
 entities/work/
+scenarios.json

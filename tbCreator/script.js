@@ -11,6 +11,8 @@ var colorToBit = {
 var list = document.getElementById("listView");
 var output = document.getElementById("output");
 
+var scenariosURL = "/scenarios";
+
 function toggleSensorBox(element) {
     element.style.backgroundColor = inversions[element.style.backgroundColor];
 }
@@ -87,4 +89,41 @@ function createSensorList(sensorName, sensorBoxIndex) {
         output.appendChild(document.createElement("br"));
         time += interval;
     }
+}
+
+function getScenarios() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', scenariosURL, true);
+    xhr.onload = function() {
+        if (xhr.status !== 200  || xhr.responseText.error) {
+            console.log('Request failed.  Returned status of ' + xhr.status);
+            console.log(xhr.responseText);
+        } else {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send();
+
+}
+
+function writeScenario() {
+    var name = document.getElementById("scenarioInput").value;
+    var data = output.innerText;
+    var xhr = new XMLHttpRequest();
+    xhr.open('PUT', scenariosURL);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+        if (xhr.status !== 200  || xhr.responseText.error) {
+            console.log('Request failed.  Returned status of ' + xhr.status);
+            console.log(xhr.responseText);
+        }
+        else {
+            console.log(xhr.responseText);
+        }
+    };
+    xhr.send(JSON.stringify({
+        name: name,
+        data: data
+    }));
+
 }
