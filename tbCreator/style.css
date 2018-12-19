@@ -11,8 +11,8 @@
 .savedListElement {
     text-align: center;
     border: 1px solid black;
-    width: 8em;
-    height: 1.5em;
+    min-width: 8em;
+    min-height: 1.5em;
     margin-bottom: 0.3em;
     cursor: pointer;
 }
