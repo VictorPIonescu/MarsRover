@@ -8,6 +8,10 @@
     margin-right: 0.1em;
 }
 
+.savedListElement {
+    border: 1px solid black;
+}
+
 /*#container {*/
     /*display: flex;*/
 /*}*/

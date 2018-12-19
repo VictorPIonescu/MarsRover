@@ -19,6 +19,7 @@ var savedLists;
 
 var list = document.getElementById("listView");
 var output = document.getElementById("output");
+var savedListsList = document.getElementById("savedLists");
 
 var scenariosURL = "/scenarios";
 
@@ -87,6 +88,25 @@ function refreshElementList() {
 
         list.appendChild(itemDiv);
     }
+    createOutput();
+}
+
+function selectList(list) {
+    current = list;
+    refreshElementList();
+}
+
+function refreshSavedList() {
+    var keys = Object.keys(savedLists);
+    savedListsList.innerHTML = "";
+    for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        var savedListElement = document.createElement("div");
+        savedListElement.className = "savedListElement";
+        savedListElement.onclick = function(key) {return function() {selectList(savedLists[key])}}(key);
+        savedListElement.innerText = key;
+        savedListsList.appendChild(savedListElement);
+    }
 }
 
 function createOutput() {
@@ -126,7 +146,9 @@ function getScenarios() {
             console.log('Request failed.  Returned status of ' + xhr.status);
             console.log(xhr.responseText);
         } else {
-            console.log(xhr.responseText);
+            savedLists = JSON.parse(xhr.responseText);
+            console.log(savedLists);
+            refreshSavedList();
         }
     };
     xhr.send();
@@ -135,7 +157,7 @@ function getScenarios() {
 
 function writeScenario() {
     var name = document.getElementById("scenarioInput").value;
-    var data = output.innerText;
+    var data = current;
     var xhr = new XMLHttpRequest();
     xhr.open('PUT', scenariosURL);
     xhr.setRequestHeader('Content-Type', 'application/json');
